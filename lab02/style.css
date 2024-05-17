@@ -1,0 +1,7 @@
+
+h1 {background-color: #b5d8e3; margin-top: 2px; margin-bottom: 2px; padding: 5px; }
+body {background-color: #daebf1;}
+table {border-collapse: collapse; width: 100%; }
+
+table thead th {text-align: left; padding-bottom: 5px; padding-top: 5px;}
+table tbody th {text-align: left; padding-bottom: 5px; padding-top: 5px;}
