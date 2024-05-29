@@ -28,8 +28,50 @@
                 board[ghost] = "^";
                 board[fruit] = "@";
                 console.log(board);
+
             }
-            
+            function moveRight(board){
+                let pacmanIndex = board.indexOf("C");
+                if (pacmanIndex < board.length - 1) {
+                    let newIndex = pacmanIndex + 1;
+                   // Swap positions
+                    if (board[newIndex] === ".") {
+                        board[newIndex] = "C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "@") {
+                        board[newIndex] = "C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "^") {
+                        board[newIndex] = "^C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "@^") {
+                        board[newIndex] = "@^C";
+                        board[pacmanIndex] = ".";
+                    }
+                }
+                console.log(board);
+            }
+            function moveLeft(board){
+                let pacmanIndex = board.indexOf("C");
+                if (pacmanIndex > 0) {
+                    let newIndex = pacmanIndex - 1;
+                   // Swap positions
+                    if (board[newIndex] === ".") {
+                        board[newIndex] = "C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "@") {
+                        board[newIndex] = "C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "^") {
+                        board[newIndex] = "^C";
+                        board[pacmanIndex] = ".";
+                    } else if (board[newIndex] === "@^") {
+                        board[newIndex] = "@^C";
+                        board[pacmanIndex] = ".";
+                    }
+                }
+                console.log(board);
+            }
         </script> 
     </body>
 </html>
