@@ -8,7 +8,7 @@
     <body> 
 
         <script type = "text/javascript">
-            function createGame(n){
+            function createGame(n, level = 1){
                 const board = new Array(n).fill("."); 
                 let pacman = Math.floor(Math.random() * n); 
                 let fruit = Math.floor(Math.random() * n); 
@@ -27,71 +27,89 @@
                 board[pacman] = "C"; 
                 board[ghost] = "^.";
                 board[fruit] = "@";
-                console.log(board);
-                return board;
+                const gameState = {
+                    board: board,
+                    pacmanPosition: pacman,
+                    score: 0,
+                    level: level
+                };
+                console.log(gameState);
+                return gameState;
 
-            }
-            function moveRight(board, score){
-                let pacmanIndex = board.indexOf("C");
-                if (pacmanIndex < board.length - 1) {
-                    let newIndex = pacmanIndex + 1;
-                   // Swap positions
+            } 
+            function moveRight(gameState){
+                const board = gameState.board;
+                let pacmanIndex = gameState.pacmanPosition;
+                const n = board.length;
+                let newIndex = gameState.pacmanPosition;
+                if (pacmanIndex < n - 1) {
+                    newIndex = pacmanIndex + 1;
+
                     if (board[newIndex] === ".") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
-                        score += 1;
+                        gameState.score += 1;
+                        gameState.board[pacmanIndex] = " ";
+                        gameState.board[newIndex] = "C";
                     } else if (board[newIndex] === "@") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
-                    } else if (board[newIndex] === "^.") {
-                        board[newIndex] = "^C";
-                        board[pacmanIndex] = " ";
-                        score += 1; 
-                    } else if (board[newIndex] === "@^") {
-                        board[newIndex] = "@^C";
-                        board[pacmanIndex] = " ";
-                    }else if (board[newIndex] = " ") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
+                        //gameState.score += 2; 
+                        gameState.board[pacmanIndex] = " ";
+                        gameState.board[newIndex] = "C";
+                    } else if (board[newIndex] === "^." || board[newIndex] === "@^") {
+                        gameState.board[pacmanIndex] = " ";
+                        gameState.board[newIndex] = "^C";
+                        console.log("Game Over!");
+                        return gameState;
+                    }else if (board[newIndex] === " "){
+                        gameState.board[pacmanIndex] = " ";
+                        gameState.board[newIndex] = "C";
                     }
                 }
-                console.log(board );
-                console.log("\nThe Score: " + score);
-                return board;
+                if (!board.includes(".")) {
+                console.log("Level Complete!");
+                gameState = advanceLevel(gameState);
+                }
+                gameState.pacmanPosition = newIndex;
+
+                console.log(gameState);
+                return gameState;
             }
-            function moveLeft(board){
-                let pacmanIndex = board.indexOf("C");
+            function moveLeft(gameState){
+                const board = gameState.board;
+                let pacmanIndex = gameState.pacmanPosition;
+                let newIndex = gameState.pacmanPosition;
                 if (pacmanIndex > 0) {
-                    let newIndex = pacmanIndex - 1;
-                   // Swap positions
+                    newIndex = pacmanIndex - 1;
+
                     if (board[newIndex] === ".") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
-                        score += 1; 
+                        gameState.score += 1;
+                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[newIndex] = "C";
                     } else if (board[newIndex] === "@") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
-                        console.log(board );
-                console.log("\nThe Score: " + score);
-                    } else if (board[newIndex] === "^.") {
-                        board[newIndex] = "^C";
-                        board[pacmanIndex] = " ";
-                    } else if (board[newIndex] === "@^") {
-                        board[newIndex] = "@^C";
-                        board[pacmanIndex] = " ";
-                    }else if (board[newIndex] = " ") {
-                        board[newIndex] = "C";
-                        board[pacmanIndex] = " ";
-                    }
+                        gameState.score += 2; 
+                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[newIndex] = "C";
+                    } else if (board[newIndex] === "^." || board[newIndex] === "@^") {
+                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[newIndex] = "^C";
+                        console.log("Game Over!");
+                        return gameState;
+                    } 
                 }
-                console.log(board );
-                console.log("\nThe Score: " + score);
-                return board;
+                if (!board.includes(".")) {
+                console.log("Level Complete!");
+                gameState = advanceLevel(gameState);
+                }
+                gameState.pacmanPosition = newIndex;
+                console.log(gameState);
+                return gameState;
             }
-            var board = createGame(10);
-            var score = 0; 
-            moveRight(board, score);
-            moveLeft(board, score);
+            function advanceLevel(gameState){
+                const newGameState = createGame(gameState.board.length, gameState.level + 1);
+                newGameState.score = gameState.score; 
+                console.log("Advancing to Level " + newGameState.level);
+                return newGameState;
+            }
+            
+
 
         </script> 
     </body>
