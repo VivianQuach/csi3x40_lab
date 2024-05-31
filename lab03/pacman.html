@@ -30,8 +30,10 @@
                 const gameState = {
                     board: board,
                     pacmanPosition: pacman,
+                    ghostPosition: ghost,
                     score: 0,
-                    level: level
+                    level: level,
+                    gameOver: false
                 };
                 console.log(gameState);
                 return gameState;
@@ -56,6 +58,7 @@
                     } else if (board[newIndex] === "^." || board[newIndex] === "@^") {
                         gameState.board[pacmanIndex] = " ";
                         gameState.board[newIndex] = "^C";
+                        gameState.gameOver = true;
                         console.log("Game Over!");
                         return gameState;
                     }else if (board[newIndex] === " "){
@@ -64,8 +67,8 @@
                     }
                 }
                 if (!board.includes(".")) {
-                console.log("Level Complete!");
-                gameState = advanceLevel(gameState);
+                    console.log("Level Complete!");
+                    gameState = advanceLevel(gameState);
                 }
                 gameState.pacmanPosition = newIndex;
 
@@ -81,22 +84,27 @@
 
                     if (board[newIndex] === ".") {
                         gameState.score += 1;
-                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[pacmanIndex] = " ";
                         gameState.board[newIndex] = "C";
                     } else if (board[newIndex] === "@") {
                         gameState.score += 2; 
-                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[pacmanIndex] = " ";
                         gameState.board[newIndex] = "C";
                     } else if (board[newIndex] === "^." || board[newIndex] === "@^") {
-                        gameState.board[pacmanIndex] = ".";
+                        gameState.board[pacmanIndex] = " ";
                         gameState.board[newIndex] = "^C";
+                        gameState.gameOver = true; 
                         console.log("Game Over!");
+                        
                         return gameState;
+                    }else if (board[newIndex] === " "){
+                        gameState.board[pacmanIndex] = " ";
+                        gameState.board[newIndex] = "C";
                     } 
                 }
                 if (!board.includes(".")) {
-                console.log("Level Complete!");
-                gameState = advanceLevel(gameState);
+                    console.log("Level Complete!");
+                    gameState = advanceLevel(gameState);
                 }
                 gameState.pacmanPosition = newIndex;
                 console.log(gameState);
@@ -108,8 +116,47 @@
                 console.log("Advancing to Level " + newGameState.level);
                 return newGameState;
             }
-            
+            function moveGhost(gameState){
+                if(gameState.gameOver){
+                    return gameState;
+                }
 
+                const board = gameState.board; 
+                let ghostIndex = gameState.ghostPosition;
+                const n = board.length;
+                const directions = [-1, 1];
+                const direction = directions[Math.floor(Math.random() * directions.length)];
+                let newIndex = ghostIndex + direction;
+
+                if (newIndex >= 0 && newIndex < n) {
+                if (board[newIndex] === "C") {
+                    board[newIndex] = "^C";
+                    console.log(gameState);
+                    console.log("Game Over!");
+                    gameState.gameOver = true;
+                    return gameState;
+                } else if (board[newIndex] === "@") {
+                    board[newIndex] = "@^"; 
+                } else {
+                    board[newIndex] = "^";
+                }
+
+                if (board[ghostIndex] === "@^") {
+                    board[ghostIndex] = "@";
+                } else {
+                    board[ghostIndex] = ".";
+                }
+                gameState.ghostPosition = newIndex;
+            }
+            console.log(gameState);
+            return gameState;
+
+            }
+            var gameState = createGame(10);
+            setInterval(() => {
+                gameState = moveGhost(gameState);
+            }, 10000);
+            // For testing purpose it will be more than 2 seconds, aka 2000
 
         </script> 
     </body>
